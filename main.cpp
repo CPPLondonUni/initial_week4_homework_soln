@@ -1,3 +1,5 @@
+
+#include <algorithm>
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -59,6 +61,21 @@ double get_mean(const std::vector<double> vec)
     return sum/vec.size();
 }
 
+double get_median(std::vector<double> vec)
+{
+    // There are several ways to do this; this is not the most efficient
+    std::sort(vec.begin(), vec.end());
+
+    if (vec.size() % 2 != 0) { // odd number of elements
+        const auto middle_idx = vec.size()/2;
+        return vec[middle_idx];
+
+    } else {
+        const auto middle_idx = vec.size()/2;
+        return (vec[middle_idx] + vec[middle_idx - 1])/2.0;
+    }
+}
+
 int main()
 {
     const auto values = read_values();
@@ -66,4 +83,5 @@ int main()
     std::cout << "Minimum was " << get_min(values) << '\n';
     std::cout << "Maximum was " << get_max(values) << '\n';
     std::cout << "Mean was " << get_mean(values) << '\n';
+    std::cout << "Median was " << get_median(values) << '\n';
 }
