@@ -63,6 +63,11 @@ double get_mean(const std::vector<double> vec)
 
 double get_median(std::vector<double> vec)
 {
+    // We cannot calculate the median of zero elements
+    if (vec.empty()) {
+        return 0.0;
+    }
+
     // There are several ways to do this; this is not the most efficient
     std::sort(vec.begin(), vec.end());
 
