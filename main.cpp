@@ -3,6 +3,7 @@
 #include <iostream>
 #include <limits>
 #include <vector>
+#include <unordered_map>
 #include <numeric>
 
 std::vector<double> read_values()
@@ -81,6 +82,44 @@ double get_median(std::vector<double> vec)
     }
 }
 
+std::vector<double> get_mode(const std::vector<double> vec)
+{
+    if (vec.empty()) {
+        return vec; // Return the empty vector
+    }
+
+    // This is a hash table mapping doubles->ints
+    // It records the number of times we have seen each element
+    std::unordered_map<double, int> freqs{};
+
+    // For each entry in the vector, record the frequency
+    for (const auto d : vec) {
+        freqs[d]++;
+    }
+
+    // Next, find the maximum frequency
+    int max_freq = 0;
+
+    // Note that when we iterate over a map, the element type is a
+    // key-value pair: we are interested in the values, i.e the second
+    // element of the pair
+    for (const auto& p : freqs) {
+        max_freq = std::max(max_freq, p.second);
+    }
+
+    // Finally, for every element of the map with *value* equal to
+    // max_freq, copy its *key* into a new output vector
+    std::vector<double> output{};
+
+    for (const auto& p : freqs) {
+        if (p.second == max_freq) {
+            output.push_back(p.first);
+        }
+    }
+
+    return output;
+}
+
 int main()
 {
     const auto values = read_values();
@@ -89,4 +128,15 @@ int main()
     std::cout << "Maximum was " << get_max(values) << '\n';
     std::cout << "Mean was " << get_mean(values) << '\n';
     std::cout << "Median was " << get_median(values) << '\n';
+
+    const auto modes = get_mode(values);
+    if (modes.size() == 1) {
+        std::cout << "Mode was " << modes[0] << '\n';
+    } else {
+        std::cout << "Modal values were: ";
+        for (const auto m : modes) {
+            std::cout << m << ' ';
+        }
+        std::cout << '\n';
+    }
 }
